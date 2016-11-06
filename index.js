@@ -34,7 +34,7 @@ util.inherits(PatternMatch, Transform);
 // --
 // NOTE: This only extends the class methods - not the internal properties. As such we
 // have to make sure to call the Transform constructor(above). 
-
+//pattern, flush then transform>>?
 PatternMatch.prototype._pattern = function(pattern){
     var parts = pattern.toString().slice(1).split("/");
     var flag = (parts[1] || "g");
@@ -56,6 +56,19 @@ var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
 /** After stream has been read and transformed, the _flush method is called. It is a great
  *  place to push values to output stream and clean up existing data
  */
+
+PatternMatch.prototype._flush = function(done){
+    var match = null;
+    
+    //output
+    console.log(outputHeader, output);
+    console.log("\nType of Flush: ", this.bufferInput);
+    
+    this.bufferInput = "";
+    this.push(null);
+    
+    done();
+};
 
 PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
     console.log(inputHeader, chunk.toString("utf8"));
@@ -85,19 +98,6 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
     
     this.onepattern.lastIndex = 0;
     getNextChunk();
-};
-
-PatternMatch.prototype._flush = function(done){
-    var match = null;
-    
-    //output
-    console.log(outputHeader, output);
-    console.log("\nType of Flush: ", this.bufferInput);
-    
-    this.bufferInput = "";
-    this.push(null);
-    
-    done();
 };
 
 //FILE STUFF

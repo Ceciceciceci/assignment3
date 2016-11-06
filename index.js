@@ -1,5 +1,5 @@
 //Pattern Match: A command line app with Node.js Transform stream
-//Cecilia Tran
+//Cecilia Tran, Brandon Trieu, Sassan
 //CMPE 172
 //Note: The command line application should take "what onepattern to match"(i.e; '.' , ',' and so on) as argument flag  and hence split/splice or transform the input(sensor data shown below) using the onepattern specified in the command line.
 
@@ -102,10 +102,10 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
 //FILE STUFF
 var filename = './input-sensor.txt';
 var inputStream = fileSystem.createReadStream(filename);
-program.option('-p, --onepattern <onepattern>', 'Input Pattern such as . or ,').parse(process.argv);  //input command
-
+program.option('-p, --onepattern <onepattern>', 'Input Pattern such as . or ,').parse(process.argv);  //input command 
 var regex = null;
 
+//pattersn
 if(program.onepattern === ",") {
     regex = /\,+/i;
 } else if(program.onepattern === "."){ 
@@ -114,16 +114,16 @@ if(program.onepattern === ",") {
     regex = program.onepattern;
 }
 
-//convert to string with regexp
+//convert to regexp
 var patternMatch = inputStream.pipe(new PatternMatch(regex));
-var output = [];
+var matches = [];
 
 patternMatch.on(
     "readable",
     function(){
         var content = null;
         while(content = this.read()){
-             output.push(content.toString("utf8").trim());
+             matches.push(content.toString("utf8").trim());
         }
     }
 

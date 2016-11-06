@@ -31,7 +31,7 @@ util.inherits(PatternMatch, Transform);
 // have to make sure to call the Transform constructor(above). 
 
 PatternMatch.prototype.pattern = function(pattern){
-    var parts = pattern.toString().slice.(1).split("/");
+    var parts = pattern.toString().slice(1).split("/");
     var flag = (parts[1] || "g");
     var regex = parts[0];
     
@@ -86,7 +86,7 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
 };
 
 //FILE STUFF
-var inputStream = fs.createReadStream('./input-sensor.txt');
+var inputStream = fileSystem.createReadStream('./input-sensor.txt');
 program.option('-p, --pattern <pattern>', 'Input Pattern such as . or ,').parse(process.argv);
 
 var regex = null;

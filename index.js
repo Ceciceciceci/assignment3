@@ -59,7 +59,7 @@ PatternMatch.prototype._flush = function(done){
     
     //output
     var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
-    console.log(outputHeader, output);
+    console.log(outputHeader, matches);
     console.log("\nFlush: ", this.bufferInput);
     
     this.bufferInput = "";

@@ -46,23 +46,19 @@ PatternMatch.prototype._pattern = function(pattern){
     return (new RegExp(regex, flag));
 };
 
+var inputHeader = ">>>>>>>>>>>> Input <<<<<<<<<<<<\n";
+var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
 
-PatternMatch.prototype._flush = function(done){
-    var match = null;
-    
-    //output
-    console.log("<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n", output);
-    console.log("\nFlush: ", this.bufferInput);
-    
-    this.bufferInput = "";
-    this.push(null);
-    
-    done();
-};
+/** Transform classes require that we implement a single method called _transform and
+ *  optionally implement a method called _flush. Your assignment will implement both.
+ */
 
+/** After stream has been read and transformed, the _flush method is called. It is a great
+ *  place to push values to output stream and clean up existing data
+ */
 
 PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
-    console.log(">>>>>>>>>>>> Input Chunk <<<<<<<<<<<<\n", chunk.toString("utf8"));
+    console.log(inputHeader, chunk.toString("utf8"));
     this.bufferInput += chunk.toString("utf8");
     
     var nextOffset = null;
@@ -91,10 +87,23 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
     getNextChunk();
 };
 
+PatternMatch.prototype._flush = function(done){
+    var match = null;
+    
+    //output
+    console.log(outputHeader, output);
+    console.log("\nType of Flush: ", this.bufferInput);
+    
+    this.bufferInput = "";
+    this.push(null);
+    
+    done();
+};
+
 //FILE STUFF
 var filename = './input-sensor.txt';
 var inputStream = fileSystem.createReadStream(filename);
-program.option('-p, --onepattern <onepattern>', 'Input Pattern such as . or ,').parse(process.argv);
+program.option('-p, --onepattern <onepattern>', 'Input Pattern such as . or ,').parse(process.argv);  //input command
 
 var regex = null;
 
@@ -108,14 +117,14 @@ if(program.onepattern === ",") {
 
 //convert to string with regexp
 var patternMatch = inputStream.pipe(new PatternMatch(regex));
-var output = [];
+var matches = [];
 
 patternMatch.on(
     "readable",
     function(){
         var content = null;
         while(content = this.read()){
-            output.push(content.toString("utf8").trim());
+            matches.push(content.toString("utf8").trim());
         }
     }
 

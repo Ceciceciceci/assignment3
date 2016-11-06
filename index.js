@@ -9,7 +9,7 @@ var util = require("util");
 var Transform = require('stream').Transform;
 
 
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////s///////
 if (!Transform) {
       Transform = require('readable-stream/transform');
 }
@@ -17,11 +17,13 @@ if (!Transform) {
 //Constructor logic includes Internal state logic. PatternMatch needs to consider it  because it has to parse chunks that gets transformed
 //Switching on object mode so when stream reads sensordata it emits single pattern match.
 function PatternMatch(pattern) {
+    
+    Transform.call(this, { objectMode: true });
     if (!(this instanceof PatternMatch)) {
         return (new PatternMatch(pattern));
     }
-      this.pattern = pattern;
-      Transform.call(this, { objectMode: true });
+      this.pattern = this._pattern(pattern);
+      this.bufferInput = "";
 }
 
 util.inherits(PatternMatch, Transform);
@@ -30,7 +32,7 @@ util.inherits(PatternMatch, Transform);
 // NOTE: This only extends the class methods - not the internal properties. As such we
 // have to make sure to call the Transform constructor(above). 
 
-PatternMatch.prototype.pattern = function(pattern){
+PatternMatch.prototype._pattern = function(pattern){
     var parts = pattern.toString().slice(1).split("/");
     var flag = (parts[1] || "g");
     var regex = parts[0];
@@ -47,9 +49,9 @@ PatternMatch.prototype._flush = function(done){
     
     //output
     console.log("<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n", output);
-    console.log("\nFlush: ", this._inputBuffer);
+    console.log("\nFlush: ", this.bufferInput);
     
-    this._inputBuffer = "";
+    this.bufferInput = "";
     this.push(null);
     
     done();
@@ -58,16 +60,16 @@ PatternMatch.prototype._flush = function(done){
 
 PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
     console.log(">>>>>>>>>>>> Input Chunk <<<<<<<<<<<<\n", chunk.toString("utf-8"));
-    this._inputBuffer += chunk.toExponential("utf-8");
+    this.bufferInput += chunk.toString("utf-8");
     
     var nextOffset = null;
     var match = null;
     
-    while((match = this.pattern.exec(this._inputBuffer))!== null){
+    while((match = this.pattern.exec(this.bufferInput))!== null){
         var counter = 1;
         if(/^[a-zA-Z]+$/.test(match[0])){
 			count = match[0].length;}
-        if (this.pattern.lastIndex < this._inputBuffer.length){
+        if (this.pattern.lastIndex < this.bufferInput.length){
             this.push(chunk.toString().substring(nextOffset, this.pattern.lastIndex - counter));
             nextOffset = this.pattern.lastIndex;
         } else {
@@ -76,9 +78,9 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
     }
     
     if (nextOffset !== null) {
-        this._inputBuffer = this._inputBuffer.slice(nextOffset);
+        this.bufferInput = this.bufferInput.slice(nextOffset);
     } else {
-        this._inputBuffer = "";
+        this.bufferInput = "";
     }
     
     this.pattern.lastIndex = 0;

@@ -16,11 +16,11 @@ if (!Transform) {
 
 //Constructor logic includes Internal state logic. PatternMatch needs to consider it  because it has to parse chunks that gets transformed
 //Switching on object mode so when stream reads sensordata it emits single onepattern match.
-function PatternMatch(onepattern) {
+function PatternMatch(pattern) {
     
     Transform.call(this, { objectMode: true });
     if (!(this instanceof PatternMatch)) {
-        return (new PatternMatch(onepattern));
+        return (new PatternMatch(pattern));
     }
       this.onepattern = this._pattern(pattern);
       this.bufferInput = "";

@@ -32,7 +32,7 @@ util.inherits(PatternMatch, Transform);
 // NOTE: This only extends the class methods - not the internal properties. As such we
 // have to make sure to call the Transform constructor(above). 
 
-PatternMatch.prototype._pattern = function(onepattern){
+PatternMatch.prototype._pattern = function(pattern){
     var parts = pattern.toString().slice(1).split("/");
     var flag = (parts[1] || "g");
     var regex = parts[0];

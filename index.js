@@ -43,7 +43,7 @@ PatternMatch.prototype._pattern = function(pattern){
     if (flag.indexOf("g") === -1){
         flag += "g";
     }
-    return (new RegExp(regex, flags));
+    return (new RegExp(regex, flag));
 };
 
 

@@ -94,7 +94,7 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
 //FILE STUFF
 var filename = './input-sensor.txt';
 var inputStream = fileSystem.createReadStream(filename);
-program.option('-p, --pattern <pattern>', 'Input Pattern such as . or ,').parse(process.argv);
+program.option('-p, --onepattern <onepattern>', 'Input Pattern such as . or ,').parse(process.argv);
 
 var regex = null;
 

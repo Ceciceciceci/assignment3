@@ -46,9 +46,6 @@ PatternMatch.prototype._pattern = function(pattern){
     return (new RegExp(regex, flag));
 };
 
-var inputHeader = ">>>>>>>>>>>> Input <<<<<<<<<<<<\n";
-var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
-
 /** Transform classes require that we implement a single method called _transform and
  *  optionally implement a method called _flush. Your assignment will implement both.
  */
@@ -61,8 +58,9 @@ PatternMatch.prototype._flush = function(done){
     var match = null;
     
     //output
+    var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
     console.log(outputHeader, output);
-    console.log("\nType of Flush: ", this.bufferInput);
+    console.log("\nFlush: ", this.bufferInput);
     
     this.bufferInput = "";
     this.push(null);
@@ -71,6 +69,7 @@ PatternMatch.prototype._flush = function(done){
 };
 
 PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
+    var inputHeader = ">>>>>>>>>>>> Input <<<<<<<<<<<<\n";
     console.log(inputHeader, chunk.toString("utf8"));
     this.bufferInput += chunk.toString("utf8");
     

@@ -10,9 +10,9 @@ var Transform = require('stream').Transform;
 
 
 ////////////////////////////////////////////////s///////
-//if (!Transform) {
-//      Transform = require('readable-stream/transform');
-//}
+if (!Transform) {
+      Transform = require('readable-stream/transform');
+}
 
 //Constructor logic includes Internal state logic. PatternMatch needs to consider it  because it has to parse chunks that gets transformed
 //Switching on object mode so when stream reads sensordata it emits single onepattern match.

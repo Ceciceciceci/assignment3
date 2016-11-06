@@ -58,8 +58,8 @@ PatternMatch.prototype._flush = function(done){
     var match = null;
     
     //output
-    var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
-    console.log(outputHeader, output);
+    var outputHeader = null;
+    console.log("<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n", output);
     console.log("\nFlush: ", this.bufferInput);
     
     this.bufferInput = "";
@@ -69,8 +69,8 @@ PatternMatch.prototype._flush = function(done){
 };
 
 PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
-    var inputHeader = ">>>>>>>>>>>> Input <<<<<<<<<<<<\n";
-    console.log(inputHeader, chunk.toString("utf8"));
+    var inputHeader = null;
+    console.log(">>>>>>>>>>>> Input <<<<<<<<<<<<\n", chunk.toString("utf8"));
     this.bufferInput += chunk.toString("utf8");
     
     var nextOffset = null;

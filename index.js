@@ -58,8 +58,8 @@ PatternMatch.prototype._flush = function(done){
     var match = null;
     
     //output
-    var outputHeader = null;
-    console.log("<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n", output);
+    var outputHeader = "<<<<<<<<<<<<< Output >>>>>>>>>>>>>\n";
+    console.log(outputHeader, output);
     console.log("\nFlush: ", this.bufferInput);
     
     this.bufferInput = "";
@@ -69,8 +69,8 @@ PatternMatch.prototype._flush = function(done){
 };
 
 PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
-    var inputHeader = null;
-    console.log(">>>>>>>>>>>> Input <<<<<<<<<<<<\n", chunk.toString("utf8"));
+    var inputHeader = ">>>>>>>>>>>> Input <<<<<<<<<<<<\n";
+    console.log(inputHeader, chunk.toString("utf8"));
     this.bufferInput += chunk.toString("utf8");
     
     var nextOffset = null;
@@ -102,7 +102,7 @@ PatternMatch.prototype._transform = function(chunk, encoding, getNextChunk){
 //FILE STUFF
 var filename = './input-sensor.txt';
 var inputStream = fileSystem.createReadStream(filename);
-program.option('-p, --pattern <pattern>', 'Input Pattern such as . or ,').parse(process.argv);  //input command
+program.option('-p, --onepattern <onepattern>', 'Input Pattern such as . or ,').parse(process.argv);  //input command
 
 var regex = null;
 
@@ -116,14 +116,14 @@ if(program.onepattern === ",") {
 
 //convert to string with regexp
 var patternMatch = inputStream.pipe(new PatternMatch(regex));
-var matches = [];
+var output = [];
 
 patternMatch.on(
     "readable",
     function(){
         var content = null;
         while(content = this.read()){
-            matches.push(content.toString("utf8").trim());
+             output.push(content.toString("utf8").trim());
         }
     }
 
